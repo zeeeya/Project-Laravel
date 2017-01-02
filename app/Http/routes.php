@@ -46,6 +46,14 @@ Route::group(['middleware' => ['web']], function() {
         'uses' => 'UserController@getLogout',
         'as' => 'logout'
     ]);
+    Route::get('/account', [
+        'uses' => 'UserController@getAccount',
+        'as' => 'account'
+    ]);
+    Route::post('/upateaccount', [
+        'uses' => 'UserController@postSaveAccount',
+        'as' => 'account.save'
+    ]);
     Route::post('/edit', [
         'uses' => 'PostController@postEditPost',
         'as' => 'edit'
