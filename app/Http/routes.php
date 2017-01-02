@@ -46,5 +46,14 @@ Route::group(['middleware' => ['web']], function() {
         'uses' => 'UserController@getLogout',
         'as' => 'logout'
     ]);
+    Route::post('/edit', function(\Illuminate\Http\Request $request) {
+        return response()->json(['message' => $request['body']]);
+        /*
+         *{
+         *  message: '$request['body']'
+         *}
+         */
 
+
+    })->name('edit');
 });
