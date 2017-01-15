@@ -23,7 +23,7 @@
                     <input class="form-control" type="text" name="last_name" id="last_name" value="{{ Request::old('last_name') }}">
                 </div>
                 <div class="form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
-                    <label for="phone">Phone</label>
+                    <label for="phone">Your Phone #</label>
                     <input class="form-control" type="text" name="phone" id="phone" value="{{ Request::old('phone') }}">
                 </div>
                 <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">

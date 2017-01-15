@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-
 use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 
 class PostController extends Controller
@@ -15,6 +15,7 @@ class PostController extends Controller
         $posts = Post::orderBy('created_at', 'desc')->get();
         return view('dashboard', ['posts' => $posts]);
     }
+
     public function postCreatePost(Request $request)
     {
         $this->validate($request, [
@@ -22,6 +23,7 @@ class PostController extends Controller
         ]);
         $post = new Post();
         $post->body = $request['body'];
+        $message = 'There was an error';
         if ($request->user()->posts()->save($post)) {
             $message = 'Post successfully created!';
         }
@@ -37,6 +39,7 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('dashboard')->with(['message' => 'Successfully deleted!']);
     }
+
     public function postEditPost(Request $request)
     {
         $this->validate($request, [
@@ -50,6 +53,7 @@ class PostController extends Controller
         $post->update();
         return response()->json(['new_body' => $post->body], 200);
     }
+
     public function postLikePost(Request $request)
     {
         $post_id = $request['postId'];
