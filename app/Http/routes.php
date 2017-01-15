@@ -48,6 +48,19 @@ Route::get('/account', [
     'as' => 'account'
 ]);
 
+Route::get('/profile', [
+    'uses' => 'UserController@getProfile',
+    'as' => 'profile',
+    'middleware' => 'auth'
+]);
+
+Route::post('/profile', [
+    'uses' => 'UserController@update_avatar',
+    'as' => 'profile',
+    'middleware' => 'auth'
+]);
+
+
 Route::post('/upateaccount', [
     'uses' => 'UserController@postSaveAccount',
     'as' => 'account.save'

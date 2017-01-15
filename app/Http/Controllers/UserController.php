@@ -7,6 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests;
+use Image;
+
 
 class UserController extends Controller
 {
@@ -22,11 +25,15 @@ class UserController extends Controller
 
         $email = $request['email'];
         $first_name = $request['first_name'];
+        $last_name = $request['last_name'];
+        $phone = $request['phone'];
         $password = bcrypt($request['password']);
 
         $user = new User();
         $user->email = $email;
         $user->first_name = $first_name;
+        $user->last_name = $last_name;
+        $user->phone = $phone;
         $user->password = $password;
 
         $user->save();
@@ -59,6 +66,26 @@ class UserController extends Controller
     {
         return view('account', ['user' => Auth::user()]);
     }
+    public function getProfile(){
+        return view('profile', array('user' => Auth::user()) );
+    }
+
+    public function update_avatar(Request $request){
+
+        // Handle the user upload of avatars
+        if($request->hasFile('avatars')){
+            $avatar = $request->file('avatars');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+            Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/' . $filename ) );
+
+            $user = Auth::user();
+            $user->avatar = $filename;
+            $user->save();
+        }
+
+        return view('profile', array('user' => Auth::user()) );
+
+    }
 
     public function postSaveAccount(Request $request)
     {
@@ -67,11 +94,17 @@ class UserController extends Controller
         ]);
 
         $user = Auth::user();
+
+        $user->email = $request['email'];
         $old_name = $user->first_name;
         $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->phone = $request['phone'];
+        $user->password = $request['password'];
+
         $user->update();
         $file = $request->file('image');
-        $filename = $request['first_name'] . '-' . $user->id . '.jpg';
+        $filename = $request['email, first_name, last_name, phone'] . '-' . $user->id . '.jpg';
         $old_filename = $old_name . '-' . $user->id . '.jpg';
         $update = false;
         if (Storage::disk('local')->has($old_filename)) {
